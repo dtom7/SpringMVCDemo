@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bean:beans xmlns:bean="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/security"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+   <!-- <http pattern="/login" security="none" /> -->
+
+   <http auto-config="false" create-session="stateless" disable-url-rewriting="true"
+      entry-point-ref="statelessAuthenticationEntryPoint">
+      <intercept-url pattern="/**" access="ROLE_USER" />
+
+      <custom-filter ref="customFilters" position="FORM_LOGIN_FILTER" />
+   </http>
+
+   <bean:bean id="customFilters" class="org.springframework.web.filter.CompositeFilter">
+      <bean:property name="filters">
+         <bean:list>
+            <bean:ref bean="statelessLoginFilter" />
+            <bean:ref bean="statelessAuthenticationFilter" />
+         </bean:list>
+      </bean:property>
+   </bean:bean>
+
+   <bean:bean id="statelessLoginFilter"
+      class="com.example.springmvc.security.StatelessLoginFilter">
+      <bean:constructor-arg value="/login" />
+      <bean:constructor-arg ref="tokenAuthenticationService" />
+      <bean:constructor-arg ref="userService" />
+      <bean:property name="authenticationManager" ref="authenticationManager" />
+
+   </bean:bean>
+
+   <bean:bean id="statelessAuthenticationFilter"
+      class="com.example.springmvc.security.StatelessAuthenticationFilter">
+      <bean:constructor-arg ref="tokenAuthenticationService" />
+   </bean:bean>
+
+   <authentication-manager alias="authenticationManager">
+      <authentication-provider>
+         <user-service>
+            <user name="bob" password="test" authorities="ROLE_USER" />
+         </user-service>
+      </authentication-provider>
+   </authentication-manager>
+
+   <bean:bean id="encoder"
+      class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+   <bean:bean id="tokenAuthenticationService"
+      class="com.example.springmvc.security.TokenAuthenticationService">
+      <bean:constructor-arg value="secret" />
+      <bean:constructor-arg ref="userService" />
+   </bean:bean>
+
+   <bean:bean id="userService" class="com.example.springmvc.security.UserService" />
+
+   <bean:bean id="statelessAuthenticationEntryPoint"
+      class="com.example.springmvc.security.StatelessAuthenticationEntryPoint">
+   </bean:bean>
+
+   <!-- <bean:bean id="loginSuccessHandler" class="com.sreeven.timetrack.security.LoginSuccessHandler" 
+      /> <bean:bean id="loginFailureHandler" class="com.sreeven.timetrack.security.LoginFailureHandler" 
+      /> <bean:bean id="logoutSuccessHandler" class="com.sreeven.timetrack.security.LogoutSuccessHandler" 
+      /> -->
+</bean:beans>
