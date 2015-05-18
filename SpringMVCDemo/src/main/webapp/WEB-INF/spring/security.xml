@@ -6,16 +6,18 @@ http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/security
 http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-   <!-- <http pattern="/login" security="none" /> -->
+   <http pattern="/index.html" security="none" />
+   <http pattern="/app.js" security="none" />
 
-   <http auto-config="false" create-session="stateless" disable-url-rewriting="true"
-      entry-point-ref="statelessAuthenticationEntryPoint">
+   <http auto-config="false" create-session="stateless"
+      disable-url-rewriting="true" entry-point-ref="statelessAuthenticationEntryPoint">
       <intercept-url pattern="/**" access="ROLE_USER" />
 
       <custom-filter ref="customFilters" position="FORM_LOGIN_FILTER" />
    </http>
 
-   <bean:bean id="customFilters" class="org.springframework.web.filter.CompositeFilter">
+   <bean:bean id="customFilters"
+      class="org.springframework.web.filter.CompositeFilter">
       <bean:property name="filters">
          <bean:list>
             <bean:ref bean="statelessLoginFilter" />
