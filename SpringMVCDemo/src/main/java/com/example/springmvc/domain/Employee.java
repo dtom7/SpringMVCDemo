@@ -2,10 +2,23 @@ package com.example.springmvc.domain;
 
 public class Employee {
 	
-	private String firstName = "f"; 
-	private String lastName = "l"; 
-	private String email = "e";
-	private String telephone = "t";
+	private String firstName; 
+	private String lastName; 
+	private String email;
+	private String telephone;
+	
+	public Employee() {
+		super();
+	}
+
+	public Employee(String firstName, String lastName, String email,
+			String telephone) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.telephone = telephone;
+	}
 
 	public String getFirstName() {
 		return firstName;

@@ -48,9 +48,6 @@ http://www.springframework.org/schema/security/spring-security-3.2.xsd">
       </authentication-provider>
    </authentication-manager>
 
-   <bean:bean id="encoder"
-      class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-
    <bean:bean id="tokenAuthenticationService"
       class="com.example.springmvc.security.TokenAuthenticationService">
       <bean:constructor-arg value="secret" />
